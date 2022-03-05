@@ -4,14 +4,28 @@
     Author     : chris
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Blueberry Developer Management System</title>
+        <link rel="stylesheet" href="page/link/style.css">
     </head>
     <body>
-        <h1>Hello World!</h1>
-    </body>
-</html>
+        <header>
+            
+        </header>
+        <nav>
+            <div class="navbar">
+                <ul class="navlist">
+                    <li>
+                        <form action="public" method="post">
+                            <input type="hidden" name="action" value="toHome">
+                            <input type="submit" value="Test" class="navbutton">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
