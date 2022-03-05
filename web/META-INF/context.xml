@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/projectDragon">
+  <Resource auth="Container" 
+            driverClassName="com.mysql.jdbc.Driver" 
+            logAbandoned="true" 
+            maxActive="100" 
+            maxIdle="30" 
+            maxWait="10000" 
+            name="jdbc/data" 
+            removeAbandoned="true" 
+            removeAbandonedTimeout="60" 
+            type="javax.sql.DataSource" 
+            url="" 
+            username="admin"
+            password="admin#AWS" 
+            />
+</Context>
