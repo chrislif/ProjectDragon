@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Blueberry Developer Management System</title>
+        <title>Project Dragon Character Creator</title>
         <link rel="stylesheet" href="page/link/style.css">
     </head>
     <body>
