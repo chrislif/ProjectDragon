@@ -14,18 +14,19 @@
         <link rel="stylesheet" href="page/link/style.css">
     </head>
     <body>
-        <header>
-            
-        </header>
         <nav>
             <div class="navbar">
                 <ul class="navlist">
-                    <li>
-                        <form action="public" method="post">
-                            <input type="hidden" name="action" value="toHome">
-                            <input type="submit" value="Test" class="navbutton">
-                        </form>
-                    </li>
+                    <div class="navSection">
+                        <h1>
+                            Dragon Character Creator
+                        </h1>
+                    </div>
+                    <div class="navSection">
+                        <li>
+                            <input type="button" class="navbutton" id="login" value="Login">
+                        </li>
+                    </div>
                 </ul>
             </div>
         </nav>

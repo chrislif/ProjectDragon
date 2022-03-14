@@ -2,6 +2,7 @@ package controller;
 
 import controller.function.Authorization;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,41 +16,41 @@ public class Public extends HttpServlet {
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String url;
-        
         String action = request.getParameter("action");
         
         switch (action) {
             
             default:
-                url = "/index.jsp";
+                
                 break;
         }
-        
-        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String url;
+        PrintWriter responseOut = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         
         String action = request.getParameter("action");
         
         switch (action) {
             
-            case "toHome":
-                String result = Authorization.testDBConnection();
+            case "Login":
                 
-                request.setAttribute("result", result);
-                url = "/index.jsp";
+                responseOut.println("login successful");
                 break;
-            
+                
+            case "Logout":
+                
+                break;
+                
             default:
-                url = "/index.jsp";
+                
                 break;
         }
         
-        getServletContext().getRequestDispatcher(url).forward(request, response);
+        responseOut.flush();
     }
     
     public Public() {}
