@@ -25,9 +25,16 @@ var ajaxPost = (url, data, callback) => {
 
 function login() {
     $("#mainModal").html(
-        `<div id="modalBox" class="modalContent">
+        `<div id="modalBox" class="modalBox">
             <span id="modalCloseButton" class="closeButton">&times;</span>
-            <div id="modalContent">
+            <div id="modalHeader" class="modalHeader">
+                <h2>Login</h2>
+            </div>
+            <br>
+            <div id="modalContent" class="modalContent">
+                <p>
+                    test
+                </p>
             </div>
         </div>`);
     
@@ -35,11 +42,7 @@ function login() {
         $("#mainModal").fadeOut(100);
     });
     
-    $("#mainModal").fadeIn( 200, 
-        ajaxPost("public", {action: "Login"}, (result) => {
-            $("#modalContent").text(result);
-        })
-    );
+    $("#mainModal").fadeIn(200);
 }
 
 function logout() {
