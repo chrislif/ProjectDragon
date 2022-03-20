@@ -8,10 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- *
- * @author chris
- */
 public class AuthDB {
     public static Boolean createAccount (String username) throws SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
