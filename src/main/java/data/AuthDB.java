@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AuthDB {
-    public static Boolean createAccount (Account account, String salt, String password) throws SQLException {
+    public static Boolean createAccount (Account account, String salt, String password) throws SQLException, NoSuchAlgorithmException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
@@ -25,87 +25,78 @@ public class AuthDB {
         try {
             String hash = hashPassword(password, salt);
             statement.setString(4, hash);
-        } catch (NoSuchAlgorithmException ex) {
-            return false;
+        } 
+        catch (NoSuchAlgorithmException ex) {
+            throw ex;
         }
 
-        executeQuery(statement);
-
-        pool.freeConnection(connection);
-
+        try {
+            statement.executeUpdate();
+        } 
+        catch (SQLException ex) {
+            throw ex;
+        } 
+        finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } 
+            catch (SQLException ex) {
+                throw ex;
+            }
+            pool.freeConnection(connection);
+        }  
         return true;
     }
 
     public static Account loginAccount (String email, String password) throws SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
-
-        String query 
-                = "SELECT * FROM account"
-                + "WHERE email = ?";
-        
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, email);
-
-        ResultSet resultSet = executeResultQuery(statement);
-        resultSet.next();
-
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
         Account user = null;
 
+        String query = "SELECT * FROM account WHERE email = ?";
         
+        try {
+            statement = connection.prepareStatement(query);
+            statement.setString(1, email);
+            
+            resultSet = statement.executeQuery();
+            resultSet.next();
 
-        if (compareHash(password, resultSet.getString("salt"), resultSet.getString("hash"))) {
-            user = new Account(
-                                resultSet.getString("accountName"), 
-                                resultSet.getString("email"));
-
-            user.setAccountID(resultSet.getInt("accountID"));
+            if (compareHash(password, resultSet.getString("salt"), resultSet.getString("hash"))) {
+                user = new Account();
+                user.setAccountID(resultSet.getInt("accountID"));
+                user.setAccountName(resultSet.getString("accountName"));
+                user.setEmail(resultSet.getString("email"));
+            }
+        } 
+        catch (SQLException ex) {
+            throw ex;
+        } 
+        finally {
+            try {
+                if (resultSet != null && statement != null) {
+                    resultSet.close();
+                    statement.close();
+                }
+                pool.freeConnection(connection);
+            } 
+            catch (SQLException e) {
+                throw e;
+            }
         }
-
-        resultSet.close();
-        pool.freeConnection(connection);
-
         return user;
-    }
-
-    public static Boolean executeQuery(PreparedStatement statement) throws SQLException {
-        try {
-            statement.executeUpdate();
-        } catch (SQLException ex) {
-            throw ex;
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException ex) {
-                throw ex;
-            }
-        }
-        return true;
-    }
-
-    public static ResultSet executeResultQuery(PreparedStatement statement) throws SQLException {
-        try {
-            return statement.executeQuery();
-        } catch (SQLException ex) {
-            throw ex;
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException ex) {
-                throw ex;
-            }
-        }
     }
 
     private static Boolean compareHash(String passwordInput, String salt, String hashStored){
         try {
             String hashInput = hashPassword(passwordInput, salt);
             return hashInput.equals(hashStored);
-        } catch (NoSuchAlgorithmException ex) {
+        } 
+        catch (NoSuchAlgorithmException ex) {
             return false;
         }
     }
@@ -119,7 +110,8 @@ public class AuthDB {
             
             byte[] byteHash = md.digest();
             return bytesToHex(byteHash);
-        } catch (NoSuchAlgorithmException ex) {
+        } 
+        catch (NoSuchAlgorithmException ex) {
             throw ex;
         }
     }

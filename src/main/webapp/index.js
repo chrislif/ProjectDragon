@@ -59,7 +59,8 @@ function createUser() {
             }, 
             "POST", handleAccountCreateResult);
         $("#passwordErrorSpan").html("");
-    } else {
+    } 
+    else {
         $("#passwordErrorSpan").html("Passwords are not the same");
         if ($("#createFinalButton").attr('disabled')) $("#createFinalButton").removeAttr('disabled');
     }

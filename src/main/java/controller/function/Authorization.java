@@ -1,26 +1,35 @@
-
 package controller.function;
 
 import data.AuthDB;
 import model.Account;
+
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Authorization {
-    
-    public static String createAccount(String email, String accountName, String password) {
+    public static Boolean createAccount(String email, String accountName, String password, ArrayList<String> errorList) {
         try {
             AuthDB.createAccount(new Account(accountName, email), randomSalt(), password);
-            return "Account Created";
-        } catch (SQLException ex) {
-            return ex.getMessage();
+            return true;
+        } 
+        catch (SQLException ex) {
+            errorList.add(ex.getMessage());
+            return false;
+        } 
+        catch (NoSuchAlgorithmException ex) {
+        	errorList.add(ex.getMessage());
+            return false;
         }
     }
 
-    public static Account loginUser(String email, String password) {
+    public static Account loginUser(String email, String password, ArrayList<String> errorList) {
         try {
             return AuthDB.loginAccount(email, password);
-        } catch (SQLException ex) {
+        } 
+        catch (SQLException ex) {
+        	errorList.add(ex.getMessage());
             return null;
         }
     }

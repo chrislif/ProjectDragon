@@ -4,12 +4,14 @@ import controller.function.Authorization;
 import com.google.gson.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
 public class Account extends HttpServlet {
 
-    @Override
+	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter responseOut = response.getWriter();
 
@@ -21,15 +23,21 @@ public class Account extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter responseOut = response.getWriter();
+        ArrayList<String> errorList = new ArrayList<>();
         Gson gson = new Gson();
 
         String email = request.getParameter("email");
         String name = request.getParameter("name");
         String password = request.getParameter("password");
 
-        String result = Authorization.createAccount(email, name, password);
+        Boolean creationFlag = Authorization.createAccount(email, name, password, errorList);
 
-        responseOut.println(gson.toJson(result));
+        if (errorList.size() > 0) {
+        	responseOut.println(gson.toJson(errorList));
+        } 
+        else {
+        	responseOut.println(gson.toJson(creationFlag));
+        }
 
         responseOut.flush();
     }
