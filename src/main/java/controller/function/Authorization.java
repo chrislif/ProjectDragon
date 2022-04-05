@@ -11,8 +11,14 @@ import java.util.Random;
 public class Authorization {
     public static Boolean createAccount(String email, String accountName, String password, ArrayList<String> errorList) {
         try {
-            AuthDB.createAccount(new Account(accountName, email), randomSalt(), password);
-            return true;
+            if (!AuthDB.doesAccountExist(email)) {
+                AuthDB.createAccount(new Account(accountName, email), randomSalt(), password);
+                return true;
+            }
+            else {
+                errorList.add("Account with that email exists");
+                return false;
+            }
         } 
         catch (SQLException ex) {
             errorList.add(ex.getMessage());

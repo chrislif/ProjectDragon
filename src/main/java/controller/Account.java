@@ -32,11 +32,28 @@ public class Account extends HttpServlet {
 
         Boolean creationFlag = Authorization.createAccount(email, name, password, errorList);
 
-        if (errorList.size() > 0) {
-        	responseOut.println(gson.toJson(errorList));
+        if (creationFlag) {
+            model.Account user = Authorization.loginUser(email, password, errorList);
+
+            if (errorList.size() > 0) {
+                responseOut.println(gson.toJson(errorList));
+            } 
+            else {
+                if (user != null) {
+                    responseOut.println(gson.toJson(user));
+                }
+                else {
+                    responseOut.println(gson.toJson("Unable to Login created user"));
+                }
+            }
         } 
         else {
-        	responseOut.println(gson.toJson(creationFlag));
+            if (errorList.size() > 0) {
+                responseOut.println(gson.toJson(errorList));
+            } 
+            else {
+                responseOut.println(gson.toJson("Unable to create user"));
+            }
         }
 
         responseOut.flush();

@@ -91,6 +91,42 @@ public class AuthDB {
         return user;
     }
 
+    public static Boolean doesAccountExist (String email) throws SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        String query = "SELECT * FROM account WHERE email = ?";
+
+        try {
+            statement = connection.prepareStatement(query);
+            statement.setString(1, email);
+            
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return true;
+            }
+            return false;
+        }
+        catch (SQLException ex) {
+            throw ex;
+        } 
+        finally {
+            try {
+                if (resultSet != null && statement != null) {
+                    resultSet.close();
+                    statement.close();
+                }
+                pool.freeConnection(connection);
+            } 
+            catch (SQLException e) {
+                throw e;
+            }
+        }
+    }
+
     private static Boolean compareHash(String passwordInput, String salt, String hashStored){
         try {
             String hashInput = hashPassword(passwordInput, salt);

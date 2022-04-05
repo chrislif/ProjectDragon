@@ -12,6 +12,10 @@
         <servlet-name>Account</servlet-name>
         <servlet-class>controller.Account</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Character</servlet-name>
+        <servlet-class>controller.Character</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -20,6 +24,10 @@
     <servlet-mapping>
         <servlet-name>Account</servlet-name>
         <url-pattern>/Account</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Character</servlet-name>
+        <url-pattern>/Character</url-pattern>
     </servlet-mapping>
 
     <session-config>

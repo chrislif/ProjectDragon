@@ -1,8 +1,19 @@
 "use strict";
 
 $(document).ready(() => {
-    $("#login").click(showLoginForm);
-    $("#createAccount").click(showCreateAccountForm);
+    var currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+    if (currentUser == null) {
+        $("#navButtonSection").html(navButtonSectionLoggedOutHTML);
+        $("#login").click(showLoginForm);
+        $("#createAccount").click(showCreateAccountForm);
+    } 
+    else {
+        $("#navButtonSection").html(navButtonSectionLoggedInHTML);
+        $("#logout").click(logoutUser);
+
+        loadOverview();
+    }
 
     $(window).click(function(e) {
         if (e.target.id === "mainModal") {
@@ -37,17 +48,6 @@ function showModal() {
     $("#mainModal").fadeIn(200);
 }
 
-function loginUser() {
-    $("#loginButton").attr('disabled', 'disabled');
-    ajaxCall("Login", 
-        {
-            'email': $("#emailLogin").val(), 
-            'password': $("#passwordLogin").val() 
-        }, 
-        "POST", handleLoginResult);
-    
-}
-
 function createUser() {
     $("#createFinalButton").attr('disabled', 'disabled');
     if ($("#newAccountPassword").val() === $("#passwordCheck").val()) {
@@ -58,25 +58,80 @@ function createUser() {
                 'password': $("#newAccountPassword").val()
             }, 
             "POST", handleAccountCreateResult);
-        $("#passwordErrorSpan").html("");
-    } else {
-        $("#passwordErrorSpan").html("Passwords are not the same");
+        $("#accountErrorSpan").html("");
+    } 
+    else {
+        $("#accountErrorSpan").html("Passwords are not the same");
         if ($("#createFinalButton").attr('disabled')) $("#createFinalButton").removeAttr('disabled');
     }
 }
 
 function handleAccountCreateResult(response) {
     var result = JSON.parse(response); 
-
-    hideModal();
     console.log(result);
+
+    if (result.hasOwnProperty('accountID')) {
+        $("#navButtonSection").html(navButtonSectionLoggedInHTML);
+        $("#logout").click(logoutUser);
+
+        sessionStorage.setItem('currentUser', JSON.stringify(result));
+
+        hideModal();
+
+        loadOverview();
+    }
+    else {
+        $("#accountErrorSpan").html("Error - Check console");
+
+        $("#newAccountPassword").val('');
+        $("#passwordCheck").val('');
+
+        if ($("#createFinalButton").attr('disabled')) $("#createFinalButton").removeAttr('disabled');
+    }
+}
+
+function loginUser() {
+    $("#loginButton").attr('disabled', 'disabled');
+    ajaxCall("Login", 
+        {
+            'email': $("#emailLogin").val(), 
+            'password': $("#passwordLogin").val() 
+        }, 
+        "POST", handleLoginResult);
 }
 
 function handleLoginResult(response) {
     var result = JSON.parse(response);
-
-    hideModal();
     console.log(result);
+
+    if (result.hasOwnProperty('accountID')) {
+
+        $("#navButtonSection").html(navButtonSectionLoggedInHTML);
+        $("#logout").click(logoutUser);
+
+        sessionStorage.setItem('currentUser', JSON.stringify(result));
+
+        hideModal();
+
+        loadOverview();
+    }
+    else {
+        $("#loginErrorSpan").html(`Invalid Credentials`);
+        $("#passwordLogin").val('');
+
+        if ($("#loginButton").attr('disabled')) $("#loginButton").removeAttr('disabled');
+    }
+}
+
+function logoutUser() {
+    sessionStorage.setItem('currentUser', null);
+
+    $("#navButtonSection").html(navButtonSectionLoggedOutHTML);
+
+    $("#login").click(showLoginForm);
+    $("#createAccount").click(showCreateAccountForm);
+
+    $("#mainContent").html(defaultMainContent);
 }
 
 var ajaxCall = (url, data, type, callback) => {
@@ -109,6 +164,8 @@ var loginModalHtml = `
             <input type="password" id="passwordLogin" name="passwordLogin" class="styledInput">
             <br>
             <button type="button" id="loginButton" class="styledButton">Login</button>
+            <br>
+            <span id="loginErrorSpan" style="color:red"></span>
         </div>
     </div>`;
 
@@ -130,12 +187,39 @@ var createAccountModalHtml = `
             <br>
             <label for="newAccountPassword" class="styledInputLabel primaryText">Pasword</label>
             <br>
-            <input type="password" id="newAccountPassword" name="newAccountPassword" class="styledInput"><span id="passwordErrorSpan"></span>
+            <input type="password" id="newAccountPassword" name="newAccountPassword" class="styledInput">
             <br>
             <label for="passwordCheck" class="styledInputLabel primaryText">Re-enter Pasword</label>
             <br>
             <input type="password" id="passwordCheck" name="passwordCheck" class="styledInput">
             <br>
             <button type="button" id="createFinalButton" class="styledButton">Create</button>
+            <br>
+            <span id="accountErrorSpan" style="color:red"></span>
         </div>
+    </div>`;
+
+var navButtonSectionLoggedInHTML = `
+    <li>
+        <input type="button" class="navbutton secondaryBackground" id="logout" value="Logout">
+    </li>`;
+
+var navButtonSectionLoggedOutHTML = `
+    <li>
+        <input type="button" class="navbutton secondaryBackground" id="createAccount" value="Create Account">
+    </li>
+    <li>
+        <input type="button" class="navbutton secondaryBackground" id="login" value="Login">
+    </li>`;
+
+var defaultMainContent = `            
+    <h2>Welcome to Project Dragon!</h2>
+    <div class="subContent whiteBackground">
+        <p>
+            This project is a web application that can be used to create and manage characters for the Table Top Role Playing Game (TTRPG) Dungeons and Dragons!
+        </p>
+
+        <p>
+            Please Create an Account or Login to Continue!
+        </p>
     </div>`;

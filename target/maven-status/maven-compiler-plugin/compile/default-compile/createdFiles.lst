@@ -1,6 +1,8 @@
-controller\Account.class
+controller\Character.class
 data\AuthDB.class
 controller\function\Authorization.class
-model\Account.class
 controller\Login.class
 data\ConnectionPool.class
+model\Character.class
+controller\Account.class
+model\Account.class

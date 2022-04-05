@@ -1,9 +1,3 @@
-<%-- 
-    Document   : header
-    Created on : Mar 5, 2022, 4:18:11 PM
-    Author     : chris
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -22,7 +16,7 @@
                             Dragon Character Creator
                         </h1>
                     </div>
-                    <div class="navSection">
+                    <div id="navButtonSection" class="navSection">
                         <li>
                             <input type="button" class="navbutton secondaryBackground" id="createAccount" value="Create Account">
                         </li>
