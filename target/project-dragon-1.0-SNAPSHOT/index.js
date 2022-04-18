@@ -14,12 +14,6 @@ $(document).ready(() => {
 
         loadOverview();
     }
-
-    $(window).click(function(e) {
-        if (e.target.id === "mainModal") {
-            hideModal();
-        }
-    });
 });
 
 function showLoginForm() {
@@ -51,13 +45,11 @@ function showModal() {
 function createUser() {
     $("#createFinalButton").attr('disabled', 'disabled');
     if ($("#newAccountPassword").val() === $("#passwordCheck").val()) {
-        ajaxCall("Account", 
-            {
+        ajaxCall("Account", {
                 'email': $("#newAccountEmail").val(), 
                 'name': $("#newAccountName").val(), 
                 'password': $("#newAccountPassword").val()
-            }, 
-            "POST", handleAccountCreateResult);
+            }, "POST", handleAccountCreateResult);
         $("#accountErrorSpan").html("");
     } 
     else {
@@ -92,12 +84,10 @@ function handleAccountCreateResult(response) {
 
 function loginUser() {
     $("#loginButton").attr('disabled', 'disabled');
-    ajaxCall("Login", 
-        {
+    ajaxCall("Login", {
             'email': $("#emailLogin").val(), 
             'password': $("#passwordLogin").val() 
-        }, 
-        "POST", handleLoginResult);
+        }, "POST", handleLoginResult);
 }
 
 function handleLoginResult(response) {

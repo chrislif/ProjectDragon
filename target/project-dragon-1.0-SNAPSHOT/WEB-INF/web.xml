@@ -16,6 +16,18 @@
         <servlet-name>Character</servlet-name>
         <servlet-class>controller.Character</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CharacterList</servlet-name>
+        <servlet-class>controller.CharacterList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DisplayCharacter</servlet-name>
+        <servlet-class>controller.DisplayCharacter</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Overview</servlet-name>
+        <servlet-class>controller.Overview</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -28,6 +40,18 @@
     <servlet-mapping>
         <servlet-name>Character</servlet-name>
         <url-pattern>/Character</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CharacterList</servlet-name>
+        <url-pattern>/CharacterList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DisplayCharacter</servlet-name>
+        <url-pattern>/DisplayCharacter</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Overview</servlet-name>
+        <url-pattern>/Overview</url-pattern>
     </servlet-mapping>
 
     <session-config>

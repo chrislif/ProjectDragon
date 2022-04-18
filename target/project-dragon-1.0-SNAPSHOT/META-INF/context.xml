@@ -10,8 +10,8 @@
     removeAbandoned="true" 
     removeAbandonedTimeout="60" 
     type="javax.sql.DataSource" 
-    url="jdbc:mysql://project-dragon.ci2aly1bqiqe.us-east-1.rds.amazonaws.com:3306/project-dragon" 
-    username="admin"
-    password="admin#AWS" 
+    url="jdbc:mysql://db-capstone-do-user-11321754-0.b.db.ondigitalocean.com:25060/dragon" 
+    username="doadmin"
+    password="AVNS_CZO0M13zLBKKKCr" 
     />
 </Context>

@@ -15,6 +15,11 @@ body {
     flex-direction: column;
 }
 
+hr {
+    border: 1px solid #8E0000;
+    margin: 15px;
+}
+
 .primaryBackground {
     background-color: #990000;
 }
@@ -85,6 +90,21 @@ body {
     border-radius: 5px;
 }
 
+.characterButton {
+    margin: 15px;
+    padding: 15px;
+    box-shadow: 2px 2px 2px black;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px;
+    width: 80%;
+    text-align: left;
+}
+
+.characterButton:hover {
+    background-color: #ff0000;
+    border: 1px solid #ff0000;
+}
+
 .styledButton {
     background-color: #ffd000;
     padding: 10px 30px 10px 30px;
@@ -113,6 +133,15 @@ body {
     width: 50%;
 }
 
+.styledInputShort {
+    margin: 5px;
+    border: 1px solid #ff0000;
+    border-radius: 3px;
+    padding: 5px 10px;
+    outline: none;
+    width: 50px;
+}
+
 .styledInput:focus {
     border: 1px solid #ffd000;
 }
@@ -131,7 +160,8 @@ body {
 
 .modalBox {
     margin: 10% auto;
-    width: 80%;
+    width: 75%;
+    min-width: 600px;
     box-shadow: 2px 2px 2px black;
     border-radius: 10px;
 }
@@ -176,5 +206,24 @@ footer {
 }
 
 .footerContent {
+    margin: 15px;
+}
+
+.grid2Wrapper {
+    display: grid;
+    grid-template-columns: 75% 25%;
+}
+
+.grid3Wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.grid4Wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.gridSubContent {
     margin: 15px;
 }

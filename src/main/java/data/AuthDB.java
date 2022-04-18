@@ -67,10 +67,10 @@ public class AuthDB {
             resultSet.next();
 
             if (compareHash(password, resultSet.getString("salt"), resultSet.getString("hash"))) {
-                user = new Account();
+                user = new Account(
+                            resultSet.getString("accountName"), 
+                            resultSet.getString("email"));
                 user.setAccountID(resultSet.getInt("accountID"));
-                user.setAccountName(resultSet.getString("accountName"));
-                user.setEmail(resultSet.getString("email"));
             }
         } 
         catch (SQLException ex) {
