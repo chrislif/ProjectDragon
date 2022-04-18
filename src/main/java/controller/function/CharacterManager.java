@@ -8,10 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CharacterManager {
-    public static Boolean createCharacter(Account user, ArrayList<String> errorList) {
+    public static Boolean createCharacter(Character newCharacter, ArrayList<String> errorList) {
         try {
-            Character newCharacter = new Character();
-
             return CharacterDB.createCharacter(newCharacter);
         }
         catch (SQLException ex) {

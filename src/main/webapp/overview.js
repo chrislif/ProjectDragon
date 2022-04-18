@@ -1,8 +1,8 @@
 "use strict";
 
 class DnDClass {
-    constructor(id, name, level) {
-        this.id = id;
+    constructor(classID, name, level) {
+        this.classID = classID;
         this.name = name;
         this.level = level;
     }
@@ -108,9 +108,7 @@ function createCharacter() {
                         newStats,
                         newClassList);
 
-    console.log(newCharacter);
-
-    ajaxCall("Character", {
+    ajaxCall("AddCharacter", {
             'character': JSON.stringify(newCharacter)
         }, "POST", handleCharacterCreateResult);
 }

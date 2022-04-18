@@ -20,7 +20,7 @@ public class CharacterDB {
         ResultSet resultSet = null;
 
         String query 
-                = "INSERT INTO character (characterName, characterRace, strength, dexterity, wisdom, intelligence, charisma, constitution, currentHealth, maxHealth, accountID) "
+                = "INSERT INTO dragon.character (characterName, characterRace, strength, dexterity, wisdom, intelligence, charisma, constitution, currentHealth, maxHealth, accountID) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);

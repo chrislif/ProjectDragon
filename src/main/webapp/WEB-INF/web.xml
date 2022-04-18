@@ -13,8 +13,8 @@
         <servlet-class>controller.Account</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Character</servlet-name>
-        <servlet-class>controller.Character</servlet-class>
+        <servlet-name>AddCharacter</servlet-name>
+        <servlet-class>controller.AddCharacter</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CharacterList</servlet-name>
@@ -38,8 +38,8 @@
         <url-pattern>/Account</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Character</servlet-name>
-        <url-pattern>/Character</url-pattern>
+        <servlet-name>AddCharacter</servlet-name>
+        <url-pattern>/AddCharacter</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CharacterList</servlet-name>

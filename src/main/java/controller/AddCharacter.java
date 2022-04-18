@@ -3,7 +3,7 @@ package controller;
 import controller.function.Authorization;
 import com.google.gson.*;
 
-import model.Account;
+import model.Character;
 import controller.function.CharacterManager;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
-public class Character extends HttpServlet {
+public class AddCharacter extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,17 +30,17 @@ public class Character extends HttpServlet {
         PrintWriter responseOut = response.getWriter();
         Gson gson = new Gson();
 
-        Account user = gson.fromJson(request.getParameter("user"), Account.class);
-        String characterName = request.getParameter("characterName");
+        Character newCharacter = gson.fromJson(request.getParameter("character"), Character.class);
 
-        Boolean isCharacterCreated = CharacterManager.createCharacter(user, errorList);
+        Boolean isCharacterCreated = CharacterManager.createCharacter(newCharacter, errorList);
 
         if (errorList.size() > 0) {
             responseOut.println(gson.toJson(errorList));
         }
         else {
-            responseOut.println(gson.toJson("Character created"));
+            responseOut.println(gson.toJson("Character Created!"));
         }
+
         responseOut.flush();
     }
 }

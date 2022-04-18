@@ -4,7 +4,7 @@ controller\Account.class
 controller\function\CharacterManager.class
 model\DnDClass.class
 controller\DisplayCharacter.class
-controller\Character.class
+controller\AddCharacter.class
 data\AuthDB.class
 controller\function\Authorization.class
 controller\Login.class
