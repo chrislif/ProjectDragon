@@ -13,6 +13,10 @@
         <servlet-class>controller.Account</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>AccountList</servlet-name>
+        <servlet-class>controller.AccountList</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>AddCharacter</servlet-name>
         <servlet-class>controller.AddCharacter</servlet-class>
     </servlet>
@@ -36,6 +40,10 @@
     <servlet-mapping>
         <servlet-name>Account</servlet-name>
         <url-pattern>/Account</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AccountList</servlet-name>
+        <url-pattern>/AccountList</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddCharacter</servlet-name>

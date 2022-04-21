@@ -40,6 +40,8 @@ function loadOverview() {
     loadCharacters(currentUser);
 
     $("#showCharacterModalButton").click(showCreateCharacterForm);
+
+    checkAdmin(currentUser);
 }
 
 function loadCharacters(currentUser) {
@@ -52,27 +54,69 @@ function handleCharacterListResult(response) {
     var characterList = JSON.parse(response);
 
     $("#overviewCharacterList").html("");
-    characterList.forEach((character) => {
-        var dndClassName = "";
-        var dndClassLevel = 0;
+    characterList.forEach(createCharacterButton); 
+    
+    $(".characterButton").each(function(i, element) {
+        $(element).click(showCharacterModal);
+    });
+}
 
-        character.dndClassList.forEach((dndClass) => {
-            dndClassName += " " + dndClass.name;
-            dndClassLevel += dndClass.level;
-        });
+function createCharacterButton(character) {
+    var dndClassName = "";
+    var dndClassLevel = 0;
 
-        $("#overviewCharacterList").append(`
-            <form action="DisplayCharacter" method="GET">
-                <input type="hidden" name="characterID" value="${character.characterID}">
-                <button type="Submit" class="characterButton">
-                    <div>
-                        <p>Name : ${character.name}</p>
-                        <p>Class : ${dndClassName}</p>
-                        <p>Level : ${dndClassLevel}</p>
-                    </div>
-                </button>
-            </form>`);
-    });    
+    character.dndClassList.forEach((dndClass) => {
+        dndClassName += " " + dndClass.name;
+        dndClassLevel += dndClass.level;
+    });
+
+    $("#overviewCharacterList").append(`
+        <div>
+            <button class="characterButton" id="characterButton${character.characterID}" data-character='${JSON.stringify(character)}'>
+                <div>
+                    <p>${character.name}</p>
+                    <p>Lvl ${dndClassLevel} - ${dndClassName}</p>
+                </div>
+            </button>
+        </div>`);
+}
+
+function showCharacterModal(event) {
+    var character = JSON.parse($(event.currentTarget).attr('data-character'));
+    $("#mainModal").html(characterModalHTML);
+
+    addCharacterDataToDisplay(character);
+    addClassListToDisplay(character);
+
+    $("#modalCloseButton").click(hideModal);
+    showModal();
+}
+
+function addCharacterDataToDisplay(character) {
+    $("#modalHeader").html(`<h2>${character.name}</h2>`);
+    $("#characterRace").html(`${character.race}`);
+    $("#currentHealth").val(character.currentHealth);
+    $("#maximumHealth").val(character.healthMax);
+
+    $("#characterConstitution").val(character.stat.constitution);
+    $("#characterStrength").val(character.stat.strength);
+    $("#characterDexterity").val(character.stat.dexterity);
+    $("#characterWisdom").val(character.stat.wisdom);
+    $("#characterIntelligence").val(character.stat.intelligence);
+    $("#characterCharisma").val(character.stat.charisma);
+}
+
+function addClassListToDisplay(character) {
+    character.dndClassList.forEach((dndClass) => {
+        $("#classList").append(`
+            <div class="classDiv">
+                <label for="className" class="styledInputLabel primaryText">Class</label>
+                <input type="text" id="className" name="className" class="styledInputShort classLevel" value="${dndClass.name}" readonly>
+
+                <label for="classLevel" class="styledInputLabel primaryText">Level</label>
+                <input type="text" id="classLevel" name="classLevel" class="styledInputShort classLevel" value="${dndClass.level}" readonly>
+            </div>`);
+    });
 }
 
 function showCreateCharacterForm() {
@@ -130,9 +174,9 @@ function retrieveClassList() {
 
     $(".classDiv").each(function(i, element) {
         var newClass = new DnDClass(
-                            $(element).find("select").find(":selected").val(),
-                            $(element).find("select").find(":selected").text(),
-                            $(element).find("input").val());
+            $(element).find("select").find(":selected").val(),
+            $(element).find("select").find(":selected").text(),
+            $(element).find("input").val());
         classArray.push(newClass);
     });
 
@@ -163,8 +207,7 @@ var classInputHTML = `
 
         <label for="classLevel" class="styledInputLabel primaryText">Level</label>
         <input type="text" id="classLevel" name="classLevel" class="styledInputShort classLevel" value="1">
-    </div>
-`;
+    </div>`;
 
 var newCharacterModalHTML = `
     <div id="modalBox" class="modalBox whiteBackground">
@@ -245,4 +288,78 @@ var newCharacterModalHTML = `
         </div>
     </div>`;
 
+var classDisplayHTML = `
+    <div class="classDiv">
+        <label for="className" class="styledInputLabel primaryText">Class</label>
+        <input type="text" id="className" name="className" class="styledInputShort classLevel" value="Default">
 
+        <label for="classLevel" class="styledInputLabel primaryText">Level</label>
+        <input type="text" id="classLevel" name="classLevel" class="styledInputShort classLevel" value="1">
+    </div>`;
+
+var characterModalHTML = `
+    <div id="modalBox" class="modalBox whiteBackground">
+        <span id="modalCloseButton" class="closeButton">&times;</span>
+        <div id="modalHeader" class="modalHeader primaryBackground secondaryText">
+        </div>
+        <br>
+
+        <div id="modalContent" class="modalContent">
+            <div class="grid2Wrapper">
+                <div class="gridSubContent">
+                    <label for="characterRace" class="styledInputLabel primaryText">Race - </label>
+                    <span id="characterRace" class="styledInputLabel primaryText">Default</span>
+
+                    <div id="classList">
+                    </div>
+                </div>
+
+                <div class="gridSubContent">
+                    <label class="styledInputLabel primaryText">Health</label>
+                    <br>
+                    <input type="text" id="currentHealth" name="currentHealth" class="styledInputShort" readonly>
+                    <span>/</span>
+                    <input type="text" id="maximumHealth" name="maximumHealth" class="styledInputShort" readonly>
+                </div>
+            </div>
+            <hr>
+
+            <div class="grid3Wrapper" id="characterStats">
+                <div class="gridSubContent">
+                    <label for="characterConstitution" class="styledInputLabel primaryText">Constitution</label>
+                    <br>
+                    <input type="text" id="characterConstitution" name="characterConstitution" class="styledInputShort" value="10" readonly>
+                </div>
+
+                <div class="gridSubContent">
+                    <label for="characterStrength" class="styledInputLabel primaryText">Strength</label>
+                    <br>
+                    <input type="text" id="characterStrength" name="characterStrength" class="styledInputShort" value="10" readonly>
+                </div>
+
+                <div class="gridSubContent">
+                    <label for="characterDexterity" class="styledInputLabel primaryText">Dexterity</label>
+                    <br>
+                    <input type="text" id="characterDexterity" name="characterDexterity" class="styledInputShort" value="10" readonly>
+                </div>
+
+                <div class="gridSubContent">
+                    <label for="characterWisdom" class="styledInputLabel primaryText">Wisdom</label>
+                    <br>
+                    <input type="text" id="characterWisdom" name="characterWisdom" class="styledInputShort" value="10" readonly>
+                </div>
+
+                <div class="gridSubContent">
+                    <label for="characterIntelligence" class="styledInputLabel primaryText">Intelligence</label>
+                    <br>
+                    <input type="text" id="characterIntelligence" name="characterIntelligence" class="styledInputShort" value="10" readonly>
+                </div>
+
+                <div class="gridSubContent">
+                    <label for="characterCharisma" class="styledInputLabel primaryText">Charisma</label>
+                    <br>
+                    <input type="text" id="characterCharisma" name="characterCharisma" class="styledInputShort" value="10" readonly>
+                </div>
+            </div>
+        </div>
+    </div>`;

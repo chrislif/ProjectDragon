@@ -1,4 +1,5 @@
 data\CharacterDB.class
+controller\AccountList.class
 data\ConnectionPool.class
 controller\Account.class
 controller\function\CharacterManager.class

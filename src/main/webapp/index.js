@@ -59,8 +59,7 @@ function createUser() {
 }
 
 function handleAccountCreateResult(response) {
-    var result = JSON.parse(response); 
-    console.log(result);
+    var result = JSON.parse(response);
 
     if (result.hasOwnProperty('accountID')) {
         $("#navButtonSection").html(navButtonSectionLoggedInHTML);
@@ -92,10 +91,8 @@ function loginUser() {
 
 function handleLoginResult(response) {
     var result = JSON.parse(response);
-    console.log(result);
 
     if (result.hasOwnProperty('accountID')) {
-
         $("#navButtonSection").html(navButtonSectionLoggedInHTML);
         $("#logout").click(logoutUser);
 
@@ -108,6 +105,7 @@ function handleLoginResult(response) {
     else {
         $("#loginErrorSpan").html(`Invalid Credentials`);
         $("#passwordLogin").val('');
+        console.log(response);
 
         if ($("#loginButton").attr('disabled')) $("#loginButton").removeAttr('disabled');
     }
@@ -121,6 +119,7 @@ function logoutUser() {
     $("#login").click(showLoginForm);
     $("#createAccount").click(showCreateAccountForm);
 
+    removeAdminOverview();
     $("#mainContent").html(defaultMainContent);
 }
 

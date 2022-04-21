@@ -1,6 +1,7 @@
 package controller.function;
 
 import data.AuthDB;
+import data.AccountDB;
 import model.Account;
 
 import java.security.NoSuchAlgorithmException;
@@ -27,6 +28,16 @@ public class Authorization {
         catch (NoSuchAlgorithmException ex) {
         	errorList.add(ex.getMessage());
             return false;
+        }
+    }
+
+    public static ArrayList<Account> getAllAccounts(Account admin, ArrayList<String> errorList) {
+        try {
+            return AccountDB.getAllAccounts(admin);
+        } 
+        catch (SQLException ex) {
+        	errorList.add(ex.getMessage());
+            return null;
         }
     }
 

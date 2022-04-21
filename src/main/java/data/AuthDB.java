@@ -71,6 +71,8 @@ public class AuthDB {
                             resultSet.getString("accountName"), 
                             resultSet.getString("email"));
                 user.setAccountID(resultSet.getInt("accountID"));
+
+                user.setIsAdmin(isAccountAdmin(user));
             }
         } 
         catch (SQLException ex) {
@@ -89,6 +91,42 @@ public class AuthDB {
             }
         }
         return user;
+    }
+
+    public static Boolean isAccountAdmin(Account account) throws SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        String query = "SELECT * FROM admin WHERE accountID = ?";
+
+        try {
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, account.getAccountID());
+            
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return true;
+            }
+            return false;
+        }
+        catch (SQLException ex) {
+            throw ex;
+        } 
+        finally {
+            try {
+                if (resultSet != null && statement != null) {
+                    resultSet.close();
+                    statement.close();
+                }
+                pool.freeConnection(connection);
+            } 
+            catch (SQLException e) {
+                throw e;
+            }
+        }
     }
 
     public static Boolean doesAccountExist (String email) throws SQLException {

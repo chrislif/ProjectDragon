@@ -1,5 +1,8 @@
 package controller;
 
+import model.Character;
+import controller.function.CharacterManager;
+
 import com.google.gson.*;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,8 +14,27 @@ public class DisplayCharacter extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String url = "/page/character.jsp";
-        getServletContext().getRequestDispatcher(url).forward(request, response);
+        PrintWriter responseOut = response.getWriter();
+        Gson gson = new Gson();
+
+        ArrayList<String> errorList = new ArrayList<>();
+        int characterID = Integer.parseInt(request.getParameter("characterID"));
+
+        Character selectedCharacter = CharacterManager.getCharacterByID(characterID, errorList);
+
+        if (errorList.size() > 0) {
+        	responseOut.println(gson.toJson(errorList));
+        }
+        else {
+            if (selectedCharacter == null) {
+                responseOut.println(gson.toJson("Error"));
+            }
+            else {
+        	    responseOut.println(gson.toJson(selectedCharacter));
+            }
+        }
+
+        responseOut.flush();
     }
 
     @Override

@@ -115,14 +115,31 @@ public class CharacterDB {
         try {
             resultSet = statement.executeQuery();
 
-            Character characterSummary;
+            Character character;
             while(resultSet.next()) {
                 int characterID = resultSet.getInt("characterID");
-                characterSummary = new Character(
+
+                CharacterStat charStats = new CharacterStat(
+                                            resultSet.getInt("constitution"), 
+                                            resultSet.getInt("strength"), 
+                                            resultSet.getInt("dexterity"), 
+                                            resultSet.getInt("wisdom"), 
+                                            resultSet.getInt("intelligence"), 
+                                            resultSet.getInt("charisma"));
+                
+                ArrayList<DnDClass> dndClassList = getClassListOfID(characterID);
+
+                character = new Character(
                                     characterID, 
-                                    resultSet.getString("characterName"),
-                                    getClassListOfID(characterID));
-                characterList.add(characterSummary);
+                                    resultSet.getString("characterName"), 
+                                    resultSet.getString("characterRace"), 
+                                    resultSet.getInt("maxHealth"), 
+                                    resultSet.getInt("currentHealth"),
+                                    account, 
+                                    charStats, 
+                                    dndClassList);
+
+                characterList.add(character);
             }
         } 
         catch (SQLException ex) {
