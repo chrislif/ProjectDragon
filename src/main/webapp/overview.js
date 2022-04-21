@@ -20,7 +20,8 @@ class CharacterStat {
 }
 
 class Character {
-    constructor(name, race, healthMax, currentHealth, account, stat, dndClassList) {
+    constructor(characterID, name, race, healthMax, currentHealth, account, stat, dndClassList) {
+        this.characterID = characterID;
         this.name = name;
         this.race = race;
         this.healthMax = healthMax;
@@ -210,6 +211,51 @@ function addClassToEditModal() {
 }
 
 function saveCharacter() {
+    var currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    var previousCharacter = JSON.parse($("#mainModal").attr('data-character'));
+
+    var editedClassList = retrieveEditedClassList();
+
+    var editedStats = new CharacterStat(
+                        $('#characterConstitution').val(),
+                        $('#characterStrength').val(),
+                        $('#characterDexterity').val(),
+                        $('#characterWisdom').val(),
+                        $('#characterIntelligence').val(),
+                        $('#characterCharisma').val());
+
+    var editedCharacter = new Character(
+                        previousCharacter.characterID,
+                        $('#characterName').val(),
+                        $('#characterRace').val(),
+                        $('#maximumHealth').val(),
+                        $('#currentHealth').val(),
+                        currentUser,
+                        editedStats,
+                        editedClassList);
+
+    ajaxCall("EditCharacter", {
+            'character': JSON.stringify(editedCharacter)
+        }, "POST", handleCharacterEditResult);
+}
+
+function retrieveEditedClassList() {
+    var classArray = [];
+
+    $(".classDiv").each(function(i, element) {
+        var newClass = new DnDClass(
+            $(element).find("select").find(":selected").val(),
+            $(element).find("select").find(":selected").text(),
+            $(element).find("input").val());
+        classArray.push(newClass);
+    });
+
+    return classArray;
+}
+
+function handleCharacterEditResult(response) {
+    var currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    loadCharacters(currentUser);
     
     hideModal();
 }
@@ -256,6 +302,7 @@ function createCharacter() {
                         $('#characterCharisma').val());
 
     var newCharacter = new Character(
+                        0,
                         $('#characterName').val(),
                         $('#characterRace').val(),
                         $('#maximumHealth').val(),

@@ -33,6 +33,10 @@
         <servlet-class>controller.DeleteCharacter</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>EditCharacter</servlet-name>
+        <servlet-class>controller.EditCharacter</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Overview</servlet-name>
         <servlet-class>controller.Overview</servlet-class>
     </servlet>
@@ -64,6 +68,10 @@
     <servlet-mapping>
         <servlet-name>DeleteCharacter</servlet-name>
         <url-pattern>/DeleteCharacter</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditCharacter</servlet-name>
+        <url-pattern>/EditCharacter</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Overview</servlet-name>

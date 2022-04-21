@@ -13,6 +13,7 @@ model\Character.class
 model\CharacterStat.class
 controller\CharacterList.class
 controller\DeleteCharacter.class
+controller\EditCharacter.class
 model\Account.class
 controller\Overview.class
 data\AccountDB.class
