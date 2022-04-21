@@ -55,7 +55,8 @@ public class CharacterDB {
         } 
         finally {
             try {
-                if (statement != null) {
+                if (resultSet != null && statement != null) {
+                    resultSet.close();
                     statement.close();
                 }
             } 
@@ -147,7 +148,8 @@ public class CharacterDB {
         } 
         finally {
             try {
-                if (statement != null) {
+                if (resultSet != null && statement != null) {
+                    resultSet.close();
                     statement.close();
                 }
             } 
@@ -192,7 +194,8 @@ public class CharacterDB {
         } 
         finally {
             try {
-                if (statement != null) {
+                if (resultSet != null && statement != null) {
+                    resultSet.close();
                     statement.close();
                 }
             } 
@@ -211,7 +214,7 @@ public class CharacterDB {
         Character character = null;
 
         String query 
-                = "SELECT * FROM  character "
+                = "SELECT * FROM dragon.character "
                 + "WHERE characterID = ?";
 
         PreparedStatement statement = connection.prepareStatement(query);
@@ -250,7 +253,8 @@ public class CharacterDB {
         } 
         finally {
             try {
-                if (statement != null) {
+                if (resultSet != null && statement != null) {
+                    resultSet.close();
                     statement.close();
                 }
             } 
@@ -260,5 +264,70 @@ public class CharacterDB {
             pool.freeConnection(connection);
         }  
         return character;
+    }
+
+    public static Boolean deleteCharacter(Character character) throws SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        String query 
+                = "DELETE FROM dragon.character "
+                + "WHERE characterID = ?";
+
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, character.getCharacterID());
+
+        try {
+            if (removeCharacterClass(character)) {
+                statement.executeUpdate();
+                return true;
+            }
+            return false;
+        } 
+        catch (SQLException ex) {
+            throw ex;
+        } 
+        finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } 
+            catch (SQLException ex) {
+                throw ex;
+            }
+            pool.freeConnection(connection);
+        }  
+    }
+
+    public static Boolean removeCharacterClass(Character character) throws SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        String query 
+                = "DELETE FROM dragon.characterClass "
+                + "WHERE characterID = ?";
+
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, character.getCharacterID());
+
+        try {
+            statement.executeUpdate();
+            return true;
+        } 
+        catch (SQLException ex) {
+            throw ex;
+        } 
+        finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } 
+            catch (SQLException ex) {
+                throw ex;
+            }
+            pool.freeConnection(connection);
+        }  
     }
 }

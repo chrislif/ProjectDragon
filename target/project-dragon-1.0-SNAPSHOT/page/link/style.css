@@ -135,6 +135,23 @@ hr {
     background-color: #ff0000;
 }
 
+.styledDeleteButton {
+    background-color: #ff0000;
+    color: black;
+    padding: 10px 30px 10px 30px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px black;
+}
+
+.styledDeleteButton:hover {
+    background-color: black;
+    color: white;
+}
+
 .styledInputLabel {
     margin: 5px;
 }
@@ -148,6 +165,14 @@ hr {
     width: 50%;
 }
 
+.styledInput:focus {
+    border: 1px solid #ffd000;
+}
+
+.styledInput:read-only {
+    background-color: #DCDCDC;
+}
+
 .styledInputShort {
     margin: 5px;
     border: 1px solid #ff0000;
@@ -157,8 +182,12 @@ hr {
     width: 50px;
 }
 
-.styledInput:focus {
+.styledInputShort:focus {
     border: 1px solid #ffd000;
+}
+
+.styledInputShort:read-only {
+    background-color: #DCDCDC;
 }
 
 .modalBackground {
@@ -179,6 +208,16 @@ hr {
     min-width: 600px;
     box-shadow: 2px 2px 2px black;
     border-radius: 10px;
+}
+
+.modalFlexFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modalFlexFooterButton {
+    display: flex;
 }
 
 .loginBox {
@@ -210,6 +249,19 @@ hr {
 .closeButton:hover,
 .closeButton:focus {
     color: #ffd000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.deleteButton {
+    color: #ff0000;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.deleteButton:hover,
+.deleteButton:focus {
+    color: #000000;
     text-decoration: none;
     cursor: pointer;
 }

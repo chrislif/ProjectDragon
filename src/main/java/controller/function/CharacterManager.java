@@ -37,4 +37,14 @@ public class CharacterManager {
             return null;
         }
     }
+
+    public static Boolean deleteCharacter(Character character, ArrayList<String> errorList) {
+        try {
+            return CharacterDB.deleteCharacter(character);
+        }
+        catch (SQLException ex) {
+            errorList.add(ex.getMessage());
+            return false;
+        }
+    }
 }

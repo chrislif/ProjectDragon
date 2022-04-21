@@ -29,6 +29,10 @@
         <servlet-class>controller.DisplayCharacter</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>DeleteCharacter</servlet-name>
+        <servlet-class>controller.DeleteCharacter</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Overview</servlet-name>
         <servlet-class>controller.Overview</servlet-class>
     </servlet>
@@ -56,6 +60,10 @@
     <servlet-mapping>
         <servlet-name>DisplayCharacter</servlet-name>
         <url-pattern>/DisplayCharacter</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteCharacter</servlet-name>
+        <url-pattern>/DeleteCharacter</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Overview</servlet-name>

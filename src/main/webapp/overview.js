@@ -83,10 +83,15 @@ function createCharacterButton(character) {
 
 function showCharacterModal(event) {
     var character = JSON.parse($(event.currentTarget).attr('data-character'));
+
     $("#mainModal").html(characterModalHTML);
+    $("#mainModal").attr('data-character', JSON.stringify(character));
 
     addCharacterDataToDisplay(character);
     addClassListToDisplay(character);
+
+    $("#editCharacter").click(allowCharacterEditing);
+    $("#deleteCharacter").click(deleteCharacter);
 
     $("#modalCloseButton").click(hideModal);
     showModal();
@@ -94,7 +99,7 @@ function showCharacterModal(event) {
 
 function addCharacterDataToDisplay(character) {
     $("#modalHeader").html(`<h2>${character.name}</h2>`);
-    $("#characterRace").html(`${character.race}`);
+    $("#characterRace").val(character.race);
     $("#currentHealth").val(character.currentHealth);
     $("#maximumHealth").val(character.healthMax);
 
@@ -111,12 +116,115 @@ function addClassListToDisplay(character) {
         $("#classList").append(`
             <div class="classDiv">
                 <label for="className" class="styledInputLabel primaryText">Class</label>
-                <input type="text" id="className" name="className" class="styledInputShort classLevel" value="${dndClass.name}" readonly>
+                <input type="text" id="className" name="className" class="styledInputShort className" value="${dndClass.name}" readonly>
 
                 <label for="classLevel" class="styledInputLabel primaryText">Level</label>
                 <input type="text" id="classLevel" name="classLevel" class="styledInputShort classLevel" value="${dndClass.level}" readonly>
             </div>`);
     });
+}
+
+function allowCharacterEditing() {
+    var character = JSON.parse($("#mainModal").attr('data-character'));
+
+    var name = $("#modalHeader h2").text();
+
+    $("#modalHeader").html(`<input type="text" id="characterName" class="styledInput" value="${name}">`);
+
+    allowClassEditing(character);
+
+    $("#characterRace").removeAttr('readOnly');
+    $("#currentHealth").removeAttr('readOnly');
+    $("#maximumHealth").removeAttr('readOnly');
+
+    $("#characterConstitution").removeAttr('readOnly');
+    $("#characterStrength").removeAttr('readOnly');
+    $("#characterDexterity").removeAttr('readOnly');
+    $("#characterWisdom").removeAttr('readOnly');
+    $("#characterIntelligence").removeAttr('readOnly');
+    $("#characterCharisma").removeAttr('readOnly');
+
+    $("#addClassDiv").html(`<button type="button" id="addClassButton" class="styledButton">Add Class</button>`);
+    $("#addClassButton").click(addClassToEditModal);
+
+    $("#modalButtonFooter").html(`<button type="button" id="saveCharacter" class="styledButton">Save</button>`);
+    $("#saveCharacter").click(saveCharacter);
+}
+
+function allowClassEditing(character) {
+    $("#classList").html(``);
+    var i = 0;
+
+    character.dndClassList.forEach((dndClass) => {
+        $("#classList").append(`
+            <div class="classDiv">
+                <label for="className" class="styledInputLabel primaryText">Class</label>
+                    <select name="classSelector" id="classSelector${i}">
+                        <option value="1">Warrior</option>
+                        <option value="2">Wizard</option>
+                        <option value="3">Rogue</option>
+                        <option value="4">Ranger</option>
+                        <option value="5">Bard</option>
+                        <option value="6">Paladin</option>
+                        <option value="7">Cleric</option>
+                        <option value="8">Warlock</option>
+                        <option value="9">Monk</option>
+                        <option value="10">Druid</option>
+                    </select>
+
+                <label for="classLevel" class="styledInputLabel primaryText">Level</label>
+                <input type="text" id="classLevel" name="classLevel" class="styledInputShort classLevel" value="${dndClass.level}">
+
+                <span id="deleteClassEntry" class="deleteButton">&times;</span>
+            </div>`);
+        
+        $(`#classSelector${i}`).val(`${dndClass.classID}`);
+
+        i++;
+    });
+
+    $(".deleteButton").each(function(i, element) {
+        $(element).click(deleteClassEntry);
+    });
+}
+
+function deleteClassEntry(event) {
+    $(event.currentTarget).parent().remove();
+}
+
+function addClassToEditModal() {
+    $("#classList").append(`
+        <div class="classDiv">
+            <label for="className" class="styledInputLabel primaryText">Class</label>
+            ${classSelectorHTML}
+
+            <label for="classLevel" class="styledInputLabel primaryText">Level</label>
+            <input type="text" id="classLevel" name="classLevel" class="styledInputShort classLevel" value="1">
+
+            <span id="deleteClassEntry" class="deleteButton">&times;</span>
+        </div>`);
+
+    $(".deleteButton").each(function(i, element) {
+        $(element).click(deleteClassEntry);
+    });
+}
+
+function saveCharacter() {
+    
+    hideModal();
+}
+
+function deleteCharacter() {
+    ajaxCall("DeleteCharacter", {
+        'character': $("#mainModal").attr('data-character')
+    }, "POST", handleDeleteResult);
+}
+
+function handleDeleteResult(response) {
+    var currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    loadCharacters(currentUser);
+
+    hideModal();
 }
 
 function showCreateCharacterForm() {
@@ -125,7 +233,11 @@ function showCreateCharacterForm() {
     $("#createCharacterButton").click(createCharacter);
     $("#modalCloseButton").click(hideModal);
 
-    $("#addClass").click(addClassInput);
+    $("#addClassButton").click(addClassInput);
+
+    $(".deleteButton").each(function(i, element) {
+        $(element).click(deleteClassEntry);
+    });
 
     showModal();
 }
@@ -162,11 +274,14 @@ function handleCharacterCreateResult(response) {
     loadCharacters(currentUser);
 
     hideModal();
-    console.log(response);
 }
 
 function addClassInput() {
     $("#classList").append(classInputHTML);
+
+    $(".deleteButton").each(function(i, element) {
+        $(element).click(deleteClassEntry);
+    });
 }
 
 function retrieveClassList() {
@@ -189,24 +304,29 @@ var overviewHTML = `
     </div>
     <button type="button" id="showCharacterModalButton" class="styledButton">Create Character</button>`;
 
+var classSelectorHTML = `
+    <select name="classSelector" id="classSelector">
+        <option value="1">Warrior</option>
+        <option value="2">Wizard</option>
+        <option value="3">Rogue</option>
+        <option value="4">Ranger</option>
+        <option value="5">Bard</option>
+        <option value="6">Paladin</option>
+        <option value="7">Cleric</option>
+        <option value="8">Warlock</option>
+        <option value="9">Monk</option>
+        <option value="10">Druid</option>
+    </select>`;
+
 var classInputHTML = `
     <div class="classDiv">
         <label for="classSelector" class="styledInputLabel primaryText">Class</label>
-        <select name="classSelector" id="classSelector">
-            <option value="1">Warrior</option>
-            <option value="2">Wizard</option>
-            <option value="3">Rogue</option>
-            <option value="4">Ranger</option>
-            <option value="5">Bard</option>
-            <option value="6">Paladin</option>
-            <option value="7">Cleric</option>
-            <option value="8">Warlock</option>
-            <option value="9">Monk</option>
-            <option value="10">Druid</option>
-        </select>
+        ${classSelectorHTML}
 
         <label for="classLevel" class="styledInputLabel primaryText">Level</label>
         <input type="text" id="classLevel" name="classLevel" class="styledInputShort classLevel" value="1">
+
+        <span id="deleteClassEntry" class="deleteButton">&times;</span>
     </div>`;
 
 var newCharacterModalHTML = `
@@ -279,22 +399,14 @@ var newCharacterModalHTML = `
             <div class="gridSubContent" id="classList">
                 ${classInputHTML}
             </div>
-            <button type="button" id="addClass" class="styledButton">Add Class</button>
-
+            <div id="addClassDiv">
+                <button type="button" id="addClassButton" class="styledButton">Add Class</button>
+            </div>
             <hr>
 
             <button type="button" id="createCharacterButton" class="styledButton">Create</button>
             <br>
         </div>
-    </div>`;
-
-var classDisplayHTML = `
-    <div class="classDiv">
-        <label for="className" class="styledInputLabel primaryText">Class</label>
-        <input type="text" id="className" name="className" class="styledInputShort classLevel" value="Default">
-
-        <label for="classLevel" class="styledInputLabel primaryText">Level</label>
-        <input type="text" id="classLevel" name="classLevel" class="styledInputShort classLevel" value="1">
     </div>`;
 
 var characterModalHTML = `
@@ -307,10 +419,12 @@ var characterModalHTML = `
         <div id="modalContent" class="modalContent">
             <div class="grid2Wrapper">
                 <div class="gridSubContent">
-                    <label for="characterRace" class="styledInputLabel primaryText">Race - </label>
-                    <span id="characterRace" class="styledInputLabel primaryText">Default</span>
+                    <label for="characterRace" class="styledInputLabel primaryText">Race</label>
+                    <input type="text" id="characterRace" name="characterRace" class="styledInputShort" readonly>
 
                     <div id="classList">
+                    </div>
+                    <div id="addClassDiv">
                     </div>
                 </div>
 
@@ -360,6 +474,11 @@ var characterModalHTML = `
                     <br>
                     <input type="text" id="characterCharisma" name="characterCharisma" class="styledInputShort" value="10" readonly>
                 </div>
+            </div>
+
+            <div class="modalFlexFooter gridSubContent" id="modalButtonFooter">
+                <button type="button" id="editCharacter" class="styledButton">Edit</button>
+                <button type="button" id="deleteCharacter" class="styledDeleteButton">Delete</button>
             </div>
         </div>
     </div>`;

@@ -12,6 +12,7 @@ controller\Login.class
 model\Character.class
 model\CharacterStat.class
 controller\CharacterList.class
+controller\DeleteCharacter.class
 model\Account.class
 controller\Overview.class
 data\AccountDB.class
